@@ -1,0 +1,18 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Logs
+gh_errors.log
+
+# Backups from write_script_source
+*.bak
+
+# IDE
+.vscode/
+*.suo
+*.user
