@@ -1,9 +1,13 @@
 @echo off
 REM Alien Node Plugin Installer — Windows
-REM Run from the repo root directory
+REM Can be launched from anywhere
+
+setlocal
+set SCRIPT_DIR=%~dp0
+set REPO_ROOT=%SCRIPT_DIR%..
 
 set GH_LIBRARIES=%APPDATA%\Grasshopper\Libraries
-set ZIP_SOURCE=install\alien-plugin.zip
+set ZIP_SOURCE=%SCRIPT_DIR%alien-plugin.zip
 
 echo ════════════════════════════════════════════
 echo  Alien Node Plugin Installer (Windows)
@@ -12,8 +16,7 @@ echo ═════════════════════════
 REM Check if source exists
 if not exist "%ZIP_SOURCE%" (
     echo [ERROR] Could not find %ZIP_SOURCE%
-    echo         Make sure you're running this from the repo root.
-    pause
+    echo         Make sure this file sits in install\ beside alien-plugin.zip.
     exit /b 1
 )
 
@@ -21,7 +24,6 @@ REM Check if GH Libraries folder exists
 if not exist "%GH_LIBRARIES%" (
     echo [ERROR] Grasshopper Libraries folder not found: %GH_LIBRARIES%
     echo         Is Rhino 8 installed? Open Grasshopper once to create the folder.
-    pause
     exit /b 1
 )
 
@@ -43,6 +45,9 @@ powershell -Command "Expand-Archive -Force -Path '%ZIP_SOURCE%' -DestinationPath
 
 REM Copy files
 echo Copying AlienNode.gha to %GH_LIBRARIES%...
+if exist "%GH_LIBRARIES%\AlienNode.gha" del /Q "%GH_LIBRARIES%\AlienNode.gha" 2>NUL
+if exist "%GH_LIBRARIES%\AlienNode.deps.json" del /Q "%GH_LIBRARIES%\AlienNode.deps.json" 2>NUL
+if exist "%GH_LIBRARIES%\AlienNode.runtimeconfig.json" del /Q "%GH_LIBRARIES%\AlienNode.runtimeconfig.json" 2>NUL
 copy /Y "%TEMP_DIR%\AlienNode.gha" "%GH_LIBRARIES%\AlienNode.gha"
 
 echo Copying web UI files...
@@ -65,4 +70,4 @@ echo.
 echo [DONE] Plugin installed.
 echo        Start Rhino + Grasshopper and look for Alien in the Script tab.
 echo.
-pause
+exit /b 0
